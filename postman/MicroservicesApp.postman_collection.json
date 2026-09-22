@@ -1,0 +1,219 @@
+{
+  "info": {
+    "_postman_id": "cd43a01e-47f1-421b-8cb5-366c3cb9d0d3",
+    "name": "MicroservicesApp",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58129201",
+    "_collection_link": "https://go.postman.co/collection/58129201-cd43a01e-47f1-421b-8cb5-366c3cb9d0d3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "POST /users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is JSON\", function () {\r",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\"))\r",
+              "        .to.include(\"application/json\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Created user has an ID\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+              "    pm.expect(jsonData.id).to.be.above(0);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Created user has correct data\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData.name).to.eql(\"Darius\");\r",
+              "    pm.expect(jsonData.email).to.eql(\"darius@example.com\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 1000 ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Darius\",\r\n  \"email\": \"darius@example.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5001/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5001",
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST /orders",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is JSON\", function () {\r",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\"))\r",
+              "        .to.include(\"application/json\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Order was created successfully\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData.order.id).to.be.a(\"number\");\r",
+              "    pm.expect(jsonData.order.id).to.be.above(0);\r",
+              "\r",
+              "    pm.expect(jsonData.order.userId).to.eql(1);\r",
+              "    pm.expect(jsonData.order.product).to.eql(\"Keyboard\");\r",
+              "    pm.expect(jsonData.order.quantity).to.eql(2);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"OrderService received user data from UserService\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData.user).to.exist;\r",
+              "    pm.expect(jsonData.user.id).to.eql(1);\r",
+              "    pm.expect(jsonData.user.name).to.eql(\"Darius\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 1000 ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"userId\": 1,\r\n  \"product\": \"Keyboard\",\r\n  \"quantity\": 2\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5002/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5002",
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST /orders - UserService unavailable",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is JSON\", function () {\r",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\"))\r",
+              "        .to.include(\"application/json\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Order was created successfully\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData.order.id).to.be.a(\"number\");\r",
+              "    pm.expect(jsonData.order.id).to.be.above(0);\r",
+              "\r",
+              "    pm.expect(jsonData.order.userId).to.eql(1);\r",
+              "    pm.expect(jsonData.order.product).to.eql(\"Keyboard\");\r",
+              "    pm.expect(jsonData.order.quantity).to.eql(2);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"OrderService received user data from UserService\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData.user).to.exist;\r",
+              "    pm.expect(jsonData.user.id).to.eql(1);\r",
+              "    pm.expect(jsonData.user.name).to.eql(\"Darius\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 1000 ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"userId\": 1,\r\n  \"product\": \"Keyboard\",\r\n  \"quantity\": 2\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5002/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5002",
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
